@@ -1,6 +1,7 @@
 //importa o framework express e o pacote body-parser
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express(); //cria a aplicaçao chamando a função express
 
@@ -14,6 +15,7 @@ client.connect(err => {
   client.close();
 });
 
+app.use(cors());
 app.use(bodyParser.json()); //possibilita uso de arquivos JSON
 app.use(bodyParser.urlencoded({extended: false})); 
 

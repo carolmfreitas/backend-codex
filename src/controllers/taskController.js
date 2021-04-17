@@ -67,4 +67,4 @@ router.delete('/:taskId', async (req,res) => { //apaga tarefa
 
 
 
-module.exports = app => app.use('/tasks', router);
+module.exports = router;

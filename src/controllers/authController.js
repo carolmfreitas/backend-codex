@@ -62,4 +62,4 @@ router.post('/authenticate', async (req,res) => { //rota de autenticação
 
 });
 
-module.exports = app => app.use('/auth', router); //repassa a rota /auth para o app
+module.exports = router;

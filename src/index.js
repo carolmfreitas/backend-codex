@@ -21,8 +21,8 @@ app.use(bodyParser.json()); //possibilita uso de arquivos JSON
 app.use(bodyParser.urlencoded({extended: false})); 
 app.use(morgan('dev'));
 
-require('./controllers/authController')(app); //referencia o controller de autenticação
-require('./controllers/taskController')(app);
+app.use(require('./controllers/authController'));
+app.use(require('./controllers/taskController'));
 
 app.get('/', (req,res) => {
   res.send('olá');

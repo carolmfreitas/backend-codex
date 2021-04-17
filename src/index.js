@@ -19,7 +19,14 @@ app.use(cors());
 app.use(bodyParser.json()); //possibilita uso de arquivos JSON
 app.use(bodyParser.urlencoded({extended: false})); 
 
-require('../controllers/authController')(app); //referencia o controller de autenticação
-require('../controllers/taskController')(app);
+require('./controllers/authController')(app); //referencia o controller de autenticação
+require('./controllers/taskController')(app);
 
-app.listen(3000); //indica a porta
+app.get('/', (req,res) => {
+  res.send('olá');
+});
+
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+  console.log(`iniciando na porta ${port}`);
+});

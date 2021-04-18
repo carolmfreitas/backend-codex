@@ -2,8 +2,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth');
-
 const User = require('../models/user');
+const Token = require('../models/token');
 
 const router = express.Router(); //função usada para definir rotas
 
@@ -13,8 +13,7 @@ function generateToken(params = {}) {
     }); 
 }
 
-router.post('/register', async(req,res) => { //rota de cadastro
-
+exports.register = async(req,res) => { //rota de cadastro
     const { email } = req.body;
 
     try {
@@ -33,9 +32,9 @@ router.post('/register', async(req,res) => { //rota de cadastro
     } catch(err) { //caso ocorra algum erro
         return res.status(400).send({ error: 'Falha no cadastro' });
     }
-});
+};
 
-router.post('/authenticate', async (req,res) => { //rota de autenticação
+exports.login = async (req,res) => { //rota de autenticação
     const { email, password } = req.body;
 
     try{
@@ -60,6 +59,22 @@ router.post('/authenticate', async (req,res) => { //rota de autenticação
         return res.status(400);
     }
 
-});
+};
 
-module.exports = router;
+exports.logout = async (req,res) => {
+    try{
+        const token = req.headers.authorization;
+        if(!token){
+            return res.status(400).send({ error: 'não há token' });
+        }
+        const parts = token.split(' ');
+        if(!parts.length == 2){ //verifica se o token tem duas partes(padrão)
+            return res.status(401).send({ error: 'Token error' });
+        }
+        await Token.create({ token });
+        return res.status(200).send({ message: 'logout realizado' });
+    }
+    catch(err){
+        return res.status(400);
+    }
+};

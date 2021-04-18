@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth');
+const Token = require('../models/token');
 
-module.exports = (req, res, next) => { //intercepta o usuario
+exports.authentication = (req, res, next) => { //intercepta o usuario
     const authHeader = req.headers.authorization;
 
     if(!authHeader){
@@ -20,7 +20,7 @@ module.exports = (req, res, next) => { //intercepta o usuario
         return res.status(401).send({ error: 'Token malformatted '});
     }
 
-    jwt.verify(token, authConfig.secret, (err,decoded) => { //verifica se o token corresponde ao usuario
+    jwt.verify(token, Token.secret, (err,decoded) => { //verifica se o token corresponde ao usuario
         if(err){
             return res.status(401).send({ error: 'Token inválido' });
         }
@@ -28,4 +28,3 @@ module.exports = (req, res, next) => { //intercepta o usuario
         return next();
     });
 };
-

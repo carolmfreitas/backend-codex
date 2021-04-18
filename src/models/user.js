@@ -20,10 +20,10 @@ const UserSchema = new mongoose.Schema({ //define campos do usuario
         select: false, //para que a irformação da senha não apareça no array de usuarios
     },
 
-    createdAt: { //indica data que o registro foi criado
-        type: Date,
-        default: Date.now,
-    },
+    tasks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task',
+    }],
 });
 
 UserSchema.pre('save', async function(next) { //antes de salvar o usuario a senha vai ser encriptada

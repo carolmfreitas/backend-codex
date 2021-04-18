@@ -21,11 +21,6 @@ const TaskSchema = new mongoose.Schema({ //define campos da tarefa
         ref: 'User',
         require: true,
     },
-
-    createdAt: { //indica data que o registro foi criado
-        type: Date,
-        default: Date.now,
-    },
 });
 
 const Task = mongoose.model('Task', TaskSchema);

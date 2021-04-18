@@ -10,13 +10,6 @@ const authRoute = require('./routes/auth');
 const taskRoute = require('./routes/task');
 const authMiddleware = require('./middleware/auth');
 
-
-mongoose.connect('mongodb+srv://dev:backend876@cluster0.yjokg.mongodb.net/rotinaDiaria?retryWrites=true&w=majority', { 
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-});
-
 app.use(cors());
 app.use(bodyParser.json()); //possibilita uso de arquivos JSON
 app.use(bodyParser.urlencoded({extended: false})); 

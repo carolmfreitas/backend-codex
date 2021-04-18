@@ -7,30 +7,22 @@ const Token = require('../models/token');
 
 const router = express.Router(); //função usada para definir rotas
 
-function generateToken(params = {}) {
-    return jwt.sign( params, authConfig.secret, { //gera o token
+function generateToken(userId) {
+    return jwt.sign( {id: userId}, 'ff9b12992f3d239c654cc1ff12ca373e', { //gera o token
         expiresIn: 86400, //expira em um dia
     }); 
 }
 
 exports.register = async(req,res) => { //rota de cadastro
-    const { email } = req.body;
-
+    const { name, email, password } = req.body;
     try {
-        if (await User.findOne({ email })) { //caso o email ja esteja sendo usando
-            return res.status(400).send({ error: "Usuário já existente" })
-        }
-
         const user = await User.create(req.body); //cria um novo usuario quando a rota for chamada
         user.password = undefined;
 
-        return res.send({ 
-            user,
-            token: generateToken({ id: user.id }), //repassa o token para que seja possivel logar automaticamente
-        });
+        res.status(200).json({ user, token: generateToken(user.id) });
 
     } catch(err) { //caso ocorra algum erro
-        return res.status(400).send({ error: 'Falha no cadastro' });
+        return res.status(400).send({ err: err.message });
     }
 };
 

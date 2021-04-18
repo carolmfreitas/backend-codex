@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs'); //importa o bcrypt
 const UserSchema = new mongoose.Schema({ //define campos do usuario
     name: {
         type: String, 
-        require: true, //obrigatorio
+        required: true, //obrigatorio
     },
 
     email: {
@@ -34,4 +34,4 @@ UserSchema.pre('save', async function(next) { //antes de salvar o usuario a senh
 
 const User = mongoose.model('User', UserSchema);
 
-module.exports = {User}; //exporta o usuario
+module.exports = User; //exporta o usuario

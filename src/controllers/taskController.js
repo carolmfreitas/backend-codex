@@ -1,6 +1,6 @@
 const express = require('express');
 const authMiddleware = require('../middleware/auth');
-const task = require('../models/task');
+const Task = require('../models/task');
 const user = require('../models/user');
 
 const router = express.Router(); //função usada para definir rotas
@@ -8,44 +8,42 @@ const router = express.Router(); //função usada para definir rotas
 router.use(authMiddleware.authentication); //usuario só consegue acessar o controller por meio do token
 
 exports.allTasks = async (req,res) => { //todas as tarefas
+    const { priority, userId } = req.query;
+    let body = { user: userId }
+    let tasks;
     try{
-        const tasks = await Task.find({ userId: req.id }).populate('tasks');
+        if(priority && priority === 'true') {
+            tasks = await Task.find(body).sort({ priority: "asc" }).exec();
+        }
+        else{
+            tasks = await Task.find(body);
+        }
+        return res.status(200).send({ tasks });
 
-        const prioridadeAlta = tasks.Task.filter(elem => {
-            return elem.priority.toLowerase() == 'alta';
-        });
-        const prioridadeBaixa = tasks.Task.filter(elem => {
-            return elem.priority.toLowerase() == 'baixa';
-        });
-
-        const tasksFiltradas = prioridadeAlta.concat(prioridadeBaixa);
-        return res.send({ tasksFiltradas });
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao carregar tarefas '});
+        return res.status(400).send({ err : err.message });
     }
 };
 
 exports.addTask = async (req,res) => { //criar tarefa
+    const { title, description, priority } = req.body;
+    const { userId } = req.query;
     try{
-        const { title, description, priority } = req.body;
-        const { userId } = req.params;
-
         if(!userId){
             res.status(400).send({ error: 'Sem Id do usuário' });
         }
 
         const newTask = await Task.create(req.body);
-        newTask.userId = req.id;
-        return res.send({ task });
+        return res.status(200).send({ newTask });
+
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao criar nova tarefa '});
+        return res.status(400).send({ err : err.message });
     }
 };
 
 exports.updateTask = async (req,res) => { //atualiza tarefa
+    const { title, description, priority } = req.body;
     try{
-        const { title, description, priority } = req.body;
-        
         const taskAtualizada = await Task.findByIdAndUpdate( req.params.taskId, req.body, { new: true });
         return res.send({ taskAtualizada });
 

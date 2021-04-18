@@ -21,8 +21,9 @@ const TaskSchema = new mongoose.Schema({ //define campos da tarefa
         ref: 'User',
         require: true,
     },
+
 });
 
 const Task = mongoose.model('Task', TaskSchema);
 
-module.exports = {Task}; //exporta a tarefa
+module.exports = Task; //exporta a tarefa

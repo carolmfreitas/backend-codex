@@ -8,20 +8,31 @@ const router = express.Router(); //função usada para definir rotas
 router.use(authMiddleware.authentication); //usuario só consegue acessar o controller por meio do token
 
 exports.allTasks = async (req,res) => { //todas as tarefas
-    const { priority, userId } = req.query;
-    let body = { user: userId }
-    let tasks;
-    try{
-        if(priority && priority === 'true') {
-            tasks = await Task.find(body).sort({ priority: "asc" }).exec();
+    try {
+        const { priority, userId } = req.query;
+        let body = { 
+            user: userId,
         }
-        else{
+
+        let tasks;
+
+        if(priority && priority === 'true') {
+            tasks = await Task.find(body).sort({ priority: "asc"}).exec();
+        } else {
             tasks = await Task.find(body);
         }
-        return res.status(200).send({ tasks });
-
+        
+        res.status(200).json({
+            status: 'sucess',
+            data: {
+                tasks
+            }
+        });
     } catch (err) {
-        return res.status(400).send({ err : err.message });
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        });
     }
 };
 
@@ -33,7 +44,7 @@ exports.addTask = async (req,res) => { //criar tarefa
             res.status(400).send({ error: 'Sem Id do usuário' });
         }
 
-        const newTask = await Task.create(req.body);
+        const newTask = await Task.create(req.body, { user: userId });
         return res.status(200).send({ newTask });
 
     } catch (err) {
@@ -42,21 +53,37 @@ exports.addTask = async (req,res) => { //criar tarefa
 };
 
 exports.updateTask = async (req,res) => { //atualiza tarefa
-    const { title, description, priority } = req.body;
     try{
-        const taskAtualizada = await Task.findByIdAndUpdate( req.params.taskId, req.body, { new: true });
-        return res.send({ taskAtualizada });
+        const userId = req.params.userId;
+        const task = await Task.findOne({user: userId, _id: req.params.id});
+
+        if(!task) {
+            res.status(400).json({err : err.message});
+        }
+
+        const updateTask = await Task.findByIdAndUpdate(req.params.id,
+        req.body, {
+            new: true,
+            runValidators: true
+        })
+        res.status(200).json({
+            status: 'success',
+            data: {
+                task: updateTask
+            }
+        });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao atualizar tarefa '});
+        return res.status(400).send({ err: err.message });
     }
 };
 
 exports.removeTask = async (req,res) => { //apaga tarefa
+    const { id } = req.params;
     try{
-        await Task.findByIdAndRemove(req.params.taskId);
+        await Task.findByIdAndRemove(id);
         return res.send({ message: 'Tarefa deletada!'});
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao deletar tarefa '});
+        return res.status(400).send({ err: err.message });
     }
 };

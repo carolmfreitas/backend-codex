@@ -3,23 +3,23 @@ const mongoose = require('mongoose'); //importa o mongoose
 const TaskSchema = new mongoose.Schema({ //define campos da tarefa
     title: {
         type: String, 
-        require: true, //obrigatorio
+        required: true, //obrigatorio
     },
 
     description: { //descrição da tarefa
         type: String,
-        require: true,
+        required: true,
     },
 
     priority: {
         type: String,
-        require: true,
+        required: true,
     },
     
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        require: true,
+        required: true,
     },
 
 });

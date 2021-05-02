@@ -38,13 +38,14 @@ exports.allTasks = async (req,res) => { //todas as tarefas
 
 exports.addTask = async (req,res) => { //criar tarefa
     const { title, description, priority } = req.body;
-    const { userId } = req.query;
+    console.log(req.query)
+    const userId = req.params.id;
     try{
         if(!userId){
             res.status(400).send({ error: 'Sem Id do usuário' });
         }
 
-        const newTask = await Task.create(req.body, { user: userId });
+        const newTask = await Task.create({...req.body, user: userId });
         return res.status(200).send({ newTask });
 
     } catch (err) {

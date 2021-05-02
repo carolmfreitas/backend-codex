@@ -9,11 +9,11 @@ router.use(authMiddleware.authentication); //usuario só consegue acessar o cont
 
 exports.allTasks = async (req,res) => { //todas as tarefas
     try {
-        const { priority, userId } = req.query;
+        const {priority} = req.query;
         let body = { 
-            user: userId,
+            user: req.userId.id,
         }
-
+        console.log(body)
         let tasks;
 
         if(priority && priority === 'true') {
@@ -36,15 +36,24 @@ exports.allTasks = async (req,res) => { //todas as tarefas
     }
 };
 
+exports.findById = async (req, res) => {
+    const { id } = req.params;
+
+    const task = await Task.findOne({_id : id})
+
+    return res.send({'task': task})
+}
+
 exports.addTask = async (req,res) => { //criar tarefa
     const { title, description, priority } = req.body;
-    const { userId } = req.query;
+    console.log(req.query)
+    const userId = req.params.id;
     try{
         if(!userId){
             res.status(400).send({ error: 'Sem Id do usuário' });
         }
 
-        const newTask = await Task.create(req.body, { user: userId });
+        const newTask = await Task.create({...req.body, user: userId });
         return res.status(200).send({ newTask });
 
     } catch (err) {
@@ -87,3 +96,6 @@ exports.removeTask = async (req,res) => { //apaga tarefa
         return res.status(400).send({ err: err.message });
     }
 };
+
+
+//so pra ver se agr sobe p o heroku

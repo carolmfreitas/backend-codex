@@ -19,7 +19,7 @@ const TaskSchema = new mongoose.Schema({ //define campos da tarefa
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        required: false,
     },
 
 });

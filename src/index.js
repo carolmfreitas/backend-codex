@@ -16,7 +16,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(morgan('dev'));
 
 app.use('/auth', authRoute);
-app.use(authMiddleware.authentication); 
 app.use('/tasks',taskRoute);
 
 module.exports = app;

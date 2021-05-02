@@ -9,11 +9,11 @@ router.use(authMiddleware.authentication); //usuario só consegue acessar o cont
 
 exports.allTasks = async (req,res) => { //todas as tarefas
     try {
-        const { priority, userId } = req.query;
+        const {priority} = req.query;
         let body = { 
-            user: userId,
+            user: req.userId.id,
         }
-
+        console.log(body)
         let tasks;
 
         if(priority && priority === 'true') {

@@ -8,7 +8,7 @@ mongoose.connect('mongodb+srv://dev:backend876@cluster0.yjokg.mongodb.net/rotina
   useCreateIndex: true
 });
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3003
 app.listen(port, () => {
   console.log(`iniciando na porta ${port}`);
 });

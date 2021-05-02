@@ -36,6 +36,14 @@ exports.allTasks = async (req,res) => { //todas as tarefas
     }
 };
 
+exports.findById = async (req, res) => {
+    const { id } = req.params;
+
+    const task = await Task.findOne({_id : id})
+
+    return res.send({'task': task})
+}
+
 exports.addTask = async (req,res) => { //criar tarefa
     const { title, description, priority } = req.body;
     console.log(req.query)

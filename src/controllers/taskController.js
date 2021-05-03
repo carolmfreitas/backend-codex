@@ -63,9 +63,13 @@ exports.addTask = async (req,res) => { //criar tarefa
 
 exports.updateTask = async (req,res) => { //atualiza tarefa
     try{
-        const userId = req.params.userId;
+        const id = req.params.id
+        const userId = req.body.userId;
+        console.log('userId', userId)
         const task = await Task.findOne({user: userId, _id: req.params.id});
 
+        console.log('id', id)
+        console.log('task', task)
         if(!task) {
             res.status(400).json({err : err.message});
         }

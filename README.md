@@ -1,1 +1,1 @@
-Código do Desafio da Codex Backend de criação de API para gerenciar tarefas
+Código do Desafio da Codex para criar API que gerencia tarefas
